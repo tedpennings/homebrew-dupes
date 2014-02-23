@@ -2,9 +2,9 @@ require 'formula'
 
 class Grep < Formula
   homepage 'http://www.gnu.org/software/grep/'
-  url 'http://ftpmirror.gnu.org/grep/grep-2.17.tar.xz'
-  mirror 'http://ftp.gnu.org/gnu/grep/grep-2.17.tar.xz'
-  sha256 '26fdb0220cd27699f82612352f52429b472f140cdc8315ad9eaa6d70e75a06e5'
+  url 'http://ftpmirror.gnu.org/grep/grep-2.18.tar.xz'
+  mirror 'http://ftp.gnu.org/gnu/grep/grep-2.18.tar.xz'
+  sha256 'e6436e5077fa1497feccc8feaabd3f507b172369bf120fbc9e4874bba81be720'
 
   depends_on 'pcre'
 
@@ -35,4 +35,13 @@ class Grep < Formula
     If you do not want the prefix, install using the 'default-names' option.
     EOS
   end unless build.include? 'default-names'
+
+  test do
+    text_file = (testpath/'file.txt')
+    text_file.write 'This line should be matched'
+    cmd = (build.include?('default-names')) ? 'grep' : 'ggrep'
+    grepped = `#{bin}/#{cmd} 'match' #{text_file}`
+    assert_match /should be matched/, grepped
+    assert_equal 0, $?.exitstatus
+  end
 end
